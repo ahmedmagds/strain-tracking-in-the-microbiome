@@ -1,5 +1,10 @@
 # strain-tracking-in-the-microbiome
 
+Data download
+
+1. Download read data
+2. Download assembly data
+
 Prerequisite
 
 1. Define species ANI, 95% threshold
