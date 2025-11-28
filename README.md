@@ -19,7 +19,7 @@ Read-based approaches
 2. Index E. coli genes with bwa-mem
 3. Align 1d samples to E. coli genes with bwa-mem
 4. Compare the set of . coli genes in each sample
-5. Investigate SNVs in E. coli gene alignments
+5. Investigate SNVs in E. coli gene alignments. For a given gene, show edit distance (NM) and mismatched bases (MD).
 
 Assembly-based approaches
 
