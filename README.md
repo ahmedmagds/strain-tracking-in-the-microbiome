@@ -1,117 +1,233 @@
 # Strain Tracking in the Microbiome
 
+[Google Cloud Instructions](https://docs.google.com/presentation/d/1qVzn-xnHzUcfUSqcxrDEyWHAzq5GcjFEH5H0r3qz4Aw/edit?usp=sharing)
+
+## Set up Miniconda enviornment
+
+Installation instructions for [MacOS](https://www.anaconda.com/docs/getting-started/miniconda/install#macos-terminal-installer) or [Linux/WSL](https://www.anaconda.com/docs/getting-started/miniconda/install#linux-terminal-installer)
+
+```bash
+curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
+```
+
+```bash
+bash ~/Miniconda3-latest-MacOSX-arm64.sh
+```
+
+Agree to the license, the installation location, and to modifying your login
+files.
+
+**Close and re-open your terminal.** When you re-open the terminal, you should
+see "(base)" on the left side of your prompt.
+
+```bash
+conda list
+```
+
+Now, we are going to make a conda environment for our workshop.
+
+```bash
+conda create --name strain-tracking
+```
+
+You may have to agree to some license terms during the creation of your first
+environment.
+
+```bash
+conda activate strain-tracking
+```
+
+You should now see "(strain-tracking)" on the left side of your prompt.
+
+We will use `wget` to download files from the web.
+
+```bash
+conda install wget
+```
+
+We will use `bwa-mem2` to align short reads to a reference database.
+
+```bash
+conda install -c bioconda bwa-mem2
+```
+
+We will use `vsearch` to align gene or contig sequences.
+
+```bash
+conda install -c bioconda vsearch
+```
+
 ## Data download
 
-1. Download read data
-2. Download assembly data
-3. Download E. coli reference data
+First, let's make a project directory.
 
-## Introductory lecture
+```bash
+mkdir workshop-project
+```
 
-Bacterial species and strains
+Now, we're going to move into this directory and **stay there for the rest of
+the workshop**.
 
-1. Define species ANI, 95% threshold
-2. Universal bacteria genes, species core genome, species accessory genome
-3. Introduce key species: E. coli, E. faecalis, K. pneumoniae, M. gnavus, B. longum, V. parvula
+```bash
+cd workshop-project
+```
 
-The infant growth and microbiome (IGRAM) study
+Now we're ready to download the data. First, download the assembly output.
 
-1. Original idea: obesity and weight gain
-2. Meconium paper
-3. Other papers: antibiotics, C. difficile
-4. Introduce subjects 104 and 285
+```bash
+wget 'https://zenodo.org/records/17781459/files/data_assembly.tar.gz?download=1' -O data_assembly.tar.gz
+```
+
+Extract the assembly data from the tar.gz file.
+
+```bash
+tar xvzf data_assembly.tar.gz
+```
+
+Next, download the *E. coli* reference data.
+
+```bash
+wget 'https://zenodo.org/records/17781459/files/refdb.tar.gz?download=1' -O refdb.tar.gz
+```
+
+Extract from tar.gz file.
+
+```bash
+tar xvzf refdb.tar.gz
+```
+
+Download sequence read data. This will take a few minutes.
+
+```bash
+wget 'https://zenodo.org/records/17781459/files/s104.STL.V01.1d_1.fastq.gz?download=1' -O s104.STL.V01.1d_1.fastq.gz
+wget 'https://zenodo.org/records/17781459/files/s104.STL.V02.1m_1.fastq.gz?download=1' -O s104.STL.V02.1m_1.fastq.gz
+wget 'https://zenodo.org/records/17781459/files/s285.STL.V01.1d_1.fastq.gz?download=1' -O s285.STL.V01.1d_1.fastq.gz
+wget 'https://zenodo.org/records/17781459/files/s285.STL.V02.1m_1.fastq.gz?download=1' -O s285.STL.V02.1m_1.fastq.gz
+```
 
 ## Read-based approaches to strain tracking
 
-### Introduce E. coli species-specific marker genes from StrainPhlAn
+### Read-by-read alignment
+
+The sequence read files have already been trimmed to remove low-quality
+sequences and filtered to remove human DNA.
+
+Select a few reads from one of the files and BLAST at NCBI.
 
 ```bash
-less reference_data/ecoli_marker_ids.txt
+gunzip -c s285.STL.V01.1d_1.fastq.gz | less
+```
+
+Try selecting the option "Sequences from type material" in the box titled
+"Choose search set".
+
+Discuss species-level similarity and global vs. local sequence alignment.
+
+### Species-specific marker genes from StrainPhlAn
+
+```bash
+less refdb/ecoli_strainphlan.ffn
 ```
 
 ```bash
-wc -l reference_data/ecoli_marker_ids.txt
+cat refdb/ecoli_strainphlan.ffn | grep "^>" | wc -l
 ```
 
-Try looking up a marker in UniRef. Go to [uniprot.org](https://www.uniprot.org/). Choose the UniRef database and paste in the part of the identifier before the first pipe, for example "UniRef90_P33924".
+Try looking up a marker in UniRef. Go to [uniprot.org](https://www.uniprot.org/).
+Choose the UniRef database in the menu next to the search box. Paste in the
+part of the identifier before the first "|" character, for example
+"UniRef90_P33924".
 
-Try searching for the marker nucleotide sequence on [NCBI BLAST](https://blast.ncbi.nlm.nih.gov/).
+Try searching for the marker nucleotide sequence on
+[NCBI BLAST](https://blast.ncbi.nlm.nih.gov/).
 
 ### Align reads to StrainPhlAn E. coli marker genes
 
 Index the E. coli marker genes for search.
 
 ```bash
-bwa-mem2 index ecoli_db/ecoli_markers.fna
+bwa-mem2 index refdb/ecoli_strainphlan.ffn
 ```
 
-Align 1d samples to E. coli genes with bwa-mem
+Align day 1 samples from subject 104 to E. coli marker genes with bwa-mem.
 
 ```bash
-bwa-mem2 mem ecoli_db/ecoli_markers.fna igram1_reads/s104.STL.V01.1.4d_1.fastq.gz > s104.STL.V01.1.4d_1.sam
+bwa-mem2 mem refdb/ecoli_strainphlan.ffn s104.STL.V01.1d_1.fastq.gz > s104.V01_strainphlan.sam
 ```
 
-Inspect SAM file and look for matches. Explain fields for edit distance (NM) and mismatched bases (MD).
+Inspect SAM file and look for matches. Explain fields for edit distance (NM)
+and mismatched bases (MD). Explain bitwise flag for pos/neg strand (16).
 
-Count reads aligning to each E. coli marker gene
+Count reads aligning to each E. coli marker gene.
 
 ```bash
-cat s104.STL.V01.1.4d_1.sam | grep -v "^@" | cut -f 3 | grep -vF '*' | sort | uniq -c | sort -nr > s104.STL.V01.1.4d_1_ecoli_cts.txt
+cat s104.V01_strainphlan.sam | grep -v "^@" | cut -f 3 | grep -vF '*' | sort | uniq -c | sort -nr > s104.V01_strainphlan_cts.txt
 ```
 
-Compare the set of E. coli genes in each sample. Have audience members paste gene list into spreadsheet and find overlap between samples.
+Compare the set of E. coli genes in each sample. Paste gene list into
+spreadsheet and find overlap between samples.
 
-Investigate SNVs in E. coli gene alignments. Have audience members find a SNV in a gene with high coverage and verify that the SNP appears in multiple read alignments.
+Investigate single nucleotide varants (SNVs) in E. coli gene alignments. Pick
+one SNV in a gene with high coverage and verify that the SNV appears in
+multiple read alignments.
 
 ## Assembly-based approaches to strain tracking
 
-1. Review E. coli genome (e.g., [K12](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000005845.2/)). Genome size (~5 Mbases), GC content (~50%), number of genes (~5k).
-2. Tour of contigs and annotation files. Contig length (.fna), gene location on contigs (inference.tsv), gene annotations (.ffn).
-3. Taxonomic annotation of contigs (Kraken assignment file). Look at contig assignments from 1d and 1m samples. Look at species-level summary.
-5. Use vsearch to align ORFs between samples.
+1. Review E. coli genome (e.g. [K12](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000005845.2/)).
+   Genome size (~5 Mbases), GC content (~50%), number of genes (~5k).
+2. Tour of contigs and annotation files. Contigs (.fna), gene location on
+   contigs (inference.tsv), open reading frames (.ffn), and protein sequences
+   (.faa).
+3. Taxonomic annotation of contigs (.taxa.tsv). Look at contig assignments from
+   day 1 and month 1 samples. Look at species-level summary.
+
+### Align ORFs between samples
 
 The E. coli strain is retained in infant s104.
 
 ```bash
-vsearch --usearch_global igram1_assembly/s104.STL.V01.1.4d.ffn --db igram1_assembly/s104.STL.V02.1mo.ffn --blast6out vsearch_s104.V01_s104.V02_ffn.txt --id 0.8
+vsearch --usearch_global data_assembly/s104.STL.V01.1d.ffn --db data_assembly/s104.STL.V02.1m.ffn --blast6out vsearch_s104.V01_s104.V02_ffn.txt --id 0.8
 ```
 
 Contrast with alignment to the 1d sample from infant s285.
 
 ```bash
-vsearch --usearch_global igram1_assembly/s104.STL.V01.1.4d.ffn --db igram1_assembly/s285.STL.V01.1.4d.ffn --blast6out vsearch_s104.V01_s285.V01_ffn.txt --id 0.8
+vsearch --usearch_global data_assembly/s104.STL.V01.1d.ffn --db data_assembly/s285.STL.V01.1d.ffn --blast6out vsearch_s104.V01_s285.V01_ffn.txt --id 0.8
 ```
 
-6. Use vsearch to align ORFs to Single Copy Core Genes (SCCGs).
+### Align ORFs to Single Copy Core Genes (SCCGs).
 
 ```bash
-vsearch --usearch_global igram1_assembly/s104.STL.V01.1.4d.ffn --db ecoli_db/ecoli_sccg.ffn --blast6out s104.STL.V01.1.4d_ecoli_sccg.txt --id 0.9
+vsearch --usearch_global data_assembly/s104.STL.V01.1d.ffn --db refdb/ecoli_k12_sccg.ffn --blast6out vsearch_s104.V01_ecoli_sccg.txt --id 0.8
 ```
 
 Count hits to SCCGs
 
 ```bash
-cat s104.STL.V01.1.4d_ecoli_sccg.txt | cut -f 2 | sort | uniq -c
+cat vsearch_s104.V01_ecoli_sccg.txt | cut -f 2 | sort | uniq -c
 ```
 
-We notice that one gene, NP_417757.1, was hit twice. One of the hits does not cover the full gene, and corresponds to KELACCIFFN_254 Alpha operon ribosome binding site. We can see that th other hits cover the full length of the target genes.
+We notice that one gene, NP_417757.1, was hit twice. One of the hits does not
+cover the full gene, and corresponds to KELACCIFFN_254 Alpha operon ribosome
+binding site. We can see that th other hits cover the full length of the target
+genes.
 
-7. Use vsearch to align ORFs to StrainPhlAn marker genes.
+### Align ORFs to StrainPhlAn marker genes.
 
 ```bash
-vsearch --usearch_global igram1_assembly/s104.STL.V01.1.4d.ffn --db ecoli_db/ecoli_strainphlan.ffn --blast6out vsearch_s104.V01_ecoli_strainplhan.txt --id 0.8
+vsearch --usearch_global data_assembly/s104.STL.V01.1d.ffn --db refdb/ecoli_strainphlan.ffn --blast6out vsearch_s104.V01_ecoli_strainplhan.txt --id 0.8
 ```
 
 ```bash
-cat vsearch_s104.V01_ecoli_strainplhan.txt| cut -f 2 | sort
+cat vsearch_s104.V01_ecoli_strainplhan.txt | cut -f 2 | sort
 ```
 
 Compare to the marker genes found by alignment of reads.
 
-8. BONUS: Point out phage proteins
+### BONUS: Point out phage proteins
 
 ```bash
-less -i igram1_assembly/s104.STL.V01.1.4d.ffn
+less -i igram1_assembly/s104.STL.V01.1d.ffn
 ```
 
 End with infant virome paper.
