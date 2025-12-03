@@ -1,7 +1,7 @@
 # Strain Diversity, Pangenomes, and Graph-based Analysis with Panaroo
 ## PennCHOP Microbiome Symposium – Strain Tracking in the Microbiome
 ### Table of Contents
-<br/>
+
 1. Why Strain Diversity Matters
 
 2. MLST: The Classical View of Strain Diversity
@@ -18,7 +18,8 @@
 
 8. Summary
 
-<br/>
+
+---
 
 1. **Why Strain Diversity Matters**
 
@@ -40,7 +41,7 @@ Microbial “species” consist of thousands of genetically distinct strains, ea
 
 * Strain-level diversity—not species-level—is what drives clinical, ecological, and microbiome-relevant phenotypes.
 
-
+---
 2. **MLST: The Classical View of Strain Diversity**
 
 Multi-Locus Sequence Typing (MLST) assigns strains to Sequence Types (STs) by analyzing SNPs in 7 conserved housekeeping genes.<br/>
@@ -73,22 +74,23 @@ Example STs:
 
 * P. multocida ST122<br/>
 
-**Even isolates belonging to the same ST may differ by significant accessory genes, plasmids, prophages, and islands.**<br/>
-
 ![PFGE](PFGE.png)
 <br/>
 
+**Even isolates belonging to the same ST may differ by significant accessory genes, plasmids, prophages, and islands.**<br/>
+
 ![phages](phages.png)
 
+---
 3. **What Is a Pangenome?**
 
-The pangenome of a species is the full collection of genes found across all its strains.<br/>
+* The pangenome of a species is the full collection of genes found across all its strains.<br/>
 
-It is typically much larger than the genome of any single member of the species. The pangenome can be divided into two categories: the core genome and the accessory genome.<br/>
+* It is typically much larger than the genome of any single member of the species. The pangenome can be divided into two categories: the core genome and the accessory genome.<br/>
 
-The core genome is the set of genes that are present in all members of the species. These genes are essential for the basic functions and survival of the microorganisms and are typically conserved due to their importance.<br/>
+* The core genome is the set of genes that are present in all members of the species. These genes are essential for the basic functions and survival of the microorganisms and are typically conserved due to their importance.<br/>
 
-The accessory genome (also known as the dispensable or flexible genome) is the set of genes that are present in some, but not all, members of the species. It is typically more variable than the core genome. These genes can provide additional capabilities or adaptations to specific environments, such as:
+* The accessory genome (also known as the dispensable or flexible genome) is the set of genes that are present in some, but not all, members of the species. It is typically more variable than the core genome. These genes can provide additional capabilities or adaptations to specific environments, such as:
 
 **Accessory genes determine:**
 
@@ -107,9 +109,9 @@ The accessory genome (also known as the dispensable or flexible genome) is the s
 
 In some cases, more categories are included:<br/>
 
-Shell genes: These genes are present in a moderate number of strains within a species, making them more frequent than cloud genes but less conserved than core genes.<br/>
+* Shell genes: These genes are present in a moderate number of strains within a species, making them more frequent than cloud genes but less conserved than core genes.<br/>
 
-Cloud genes: These genes are present in only a few strains within a species and are the least conserved genes in the pangenome. Cloud genes can represent recent acquisitions of genetic material, such as through horizontal gene transfer.<br/>
+* Cloud genes: These genes are present in only a few strains within a species and are the least conserved genes in the pangenome. Cloud genes can represent recent acquisitions of genetic material, such as through horizontal gene transfer.<br/>
 
 Summary:
 * Core genome: Shared by all strains (essential functions)
@@ -120,7 +122,7 @@ Summary:
 
 The pangenome can be used to study the evolution of microbial species, to identify genes that are important for particular functions, and to develop new methods for microbial diagnostics and therapeutics.<br/>
 
-
+---
 4. **_E. coli_ as a Flagship Pangenome Example**
 
 * Touchon et al., 2009 — PLoS Genetics
@@ -131,7 +133,7 @@ The pangenome can be used to study the evolution of microbial species, to identi
 
 	* 18,000 total pangenome genes
 
-
+---
 5. **Why Pangenomes Are Essential for Strain Tracking**
 
 * Accessory genome variation reveals:
@@ -150,7 +152,7 @@ The pangenome can be used to study the evolution of microbial species, to identi
 
 **Ignoring accessory genes misses most biologically meaningful differences between strains.**
 
-
+---
 
 6. **Panaroo: A Modern, Graph-Based Pangenome Tool**
 
