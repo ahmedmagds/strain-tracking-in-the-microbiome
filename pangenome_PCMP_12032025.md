@@ -136,7 +136,7 @@ The pangenome can be used to study the evolution of microbial species, to identi
 ---
 5. **Why Pangenomes Are Essential for Strain Tracking**
 
-* Accessory genome variation reveals:
+Accessory genome variation reveals:
 
 * outbreak transmission
 
@@ -148,7 +148,6 @@ The pangenome can be used to study the evolution of microbial species, to identi
 
 * host specificity
 
-* microevolution during colonization
 
 **Ignoring accessory genes misses most biologically meaningful differences between strains.**
 
@@ -225,9 +224,9 @@ scoary -g gene_presence_absence.csv -t traits.csv
 * Here are some examples of how the pangenome has been used in research:
 
 	* To study the evolution of microbial species: The pangenome can be used to compare the genomes of different strains of a species
-	* To identify genes that have been gained or lost over time. This can help to understand how the species has adapted to different environments.
-	* To identify genes that are important for particular functions:
+	* To identify genes that are important for particular functions
 	* To develop new methods for microbial diagnostics and therapeutics: The pangenome can be used to identify genes that are unique to particular strains of a species. This can help to develop new methods for diagnosing and treating microbial infections.
+	* To identify genes that have been gained or lost over time. This can help to understand how the species has adapted to different environments. Example: ![Ancient Horizontal Acquisition of Butyrate Metabolism Genes in Aggregatibacter actinomycetemcomitans](Aa.png)
 
 ## Further Readings
 * [Scoary](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1108-8)
