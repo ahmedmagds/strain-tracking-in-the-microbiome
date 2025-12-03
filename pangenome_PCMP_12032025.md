@@ -71,7 +71,8 @@ Example STs:
 
 * S. aureus ST8
 
-* P. multocida ST122
+* P. multocida ST122<br/>
+
 **Even isolates belonging to the same ST may differ by significant accessory genes, plasmids, prophages, and islands.**<br/>
 
 ![PFGE](PFGE.png)
@@ -101,7 +102,7 @@ The accessory genome (also known as the dispensable or flexible genome) is the s
 
 * environmental survival
 
-* outbreak behavior
+* outbreak behavior<br/>
 
 
 In some cases, more categories are included:<br/>
@@ -114,7 +115,7 @@ Summary:
 * Core genome: Shared by all strains (essential functions)
 * Shell genes: Present in a subset of strains
 * Cloud genes: Rare; often plasmid-, phage-, or island-associated
-* Accessory genome: Shell + cloud genes; major functional diversity
+* Accessory genome: Shell + cloud genes; major functional diversity<br/>
 
 
 The pangenome can be used to study the evolution of microbial species, to identify genes that are important for particular functions, and to develop new methods for microbial diagnostics and therapeutics.<br/>
@@ -156,7 +157,7 @@ The pangenome can be used to study the evolution of microbial species, to identi
 [Panaroo](https://gtonkinhill.github.io/panaroo/#/)
 Tonkin-Hill et al., Genome Biology (2020)
 
-Panaroo corrects annotation errors and produces a more accurate pangenome using gene neighborhood graphs.
+Panaroo is a tool that builds a clean, accurate pangenome by fixing noisy gene annotations and removing errors, helping you clearly see which genes are shared or different across bacterial strains.
 
 6.1 **Simple command**
 ```
