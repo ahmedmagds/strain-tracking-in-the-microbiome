@@ -158,6 +158,10 @@ bwa-mem2 mem refdb/ecoli_strainphlan.ffn s104.STL.V01.1d_1.fastq.gz > s104.V01_s
 Inspect SAM file and look for matches. Explain fields for edit distance (NM)
 and mismatched bases (MD). Explain bitwise flag for pos/neg strand (16).
 
+```bash
+less s104.V01_strainphlan.sam
+```
+
 Count reads aligning to each E. coli marker gene.
 
 ```bash
